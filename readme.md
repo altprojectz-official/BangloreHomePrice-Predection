@@ -1,77 +1,123 @@
-![](BHP_website.PNG)
+# Bangalore Home Price Prediction
 
-> **Note:** For instructions on how to run this project locally on Windows, see [README_LOCAL.md](README_LOCAL.md).
+A comprehensive machine learning web application that predicts real estate prices in Bangalore. This project demonstrates the integration of a Machine Learning model (built with Scikit-learn) into a user-friendly web interface using a Python Flask backend and a vanilla HTML/CSS/JS frontend.
 
-This data science project series walks through step by step process of how to build a real estate price prediction website. We will first build a model using sklearn and linear regression using banglore home prices dataset from kaggle.com. Second step would be to write a python flask server that uses the saved model to serve http requests. Third component is the website built in html, css and javascript that allows user to enter home square ft area, bedrooms etc and it will call python flask server to retrieve the predicted price. During model building we will cover almost all data science concepts such as data load and cleaning, outlier detection and removal, feature engineering, dimensionality reduction, gridsearchcv for hyperparameter tunning, k fold cross validation etc. Technology and tools wise this project covers,
+## 🚀 Features
 
-1. Python
-2. Numpy and Pandas for data cleaning
-3. Matplotlib for data visualization
-4. Sklearn for model building
-5. Jupyter notebook, visual studio code and pycharm as IDE
-6. Python flask for http server
-7. HTML/CSS/Javascript for UI
+- **Smart Price Prediction**: elaborate predictions based on location, square footage, BHK (bedrooms), and bathrooms.
+- **Price Range Estimation**: Provides a likely price range (±10%) alongside the specific estimated value.
+- **Price Per Square Foot**: Automatically calculated for better value assessment.
+- **Confidence Indicator**: Displays a confidence level (High, Medium, Low) based on input validation logic (e.g., checking for realistic square footage).
+- **Interactive UI**: Clean and responsive detailed user interface for easy data entry.
 
-# Deploy this app to cloud (AWS EC2)
+## 🛠 Technology Stack
 
-1. Create EC2 instance using amazon console, also in security group add a rule to allow HTTP incoming traffic
-2. Now connect to your instance using a command like this,
+- **Machine Learning**: 
+  - `scikit-learn` for the regression model
+  - `pandas` and `numpy` for data manipulation
+- **Backend API**: 
+  - `Python 3`
+  - `Flask` micro-framework
+- **Frontend**: 
+  - `HTML5`, `CSS3`
+  - `JavaScript` (Vanilla) with `jQuery` for API calls
+
+## 📂 Project Structure
+
+```bash
+BangloreHomePrices/
+├── client/                 # Frontend Application
+│   ├── app.html            # Main UI file
+│   ├── app.css             # Styling logic
+│   └── app.js              # Frontend logic and API integration
+├── server/                 # Backend Application
+│   ├── server.py           # Main Flask application entry point
+│   ├── util.py             # Utility functions for model/artifact loading
+│   ├── minimal_server.py   # Alternative minimal server implementation
+│   ├── requirements.txt    # Python dependencies
+│   └── artifacts/          # ML Model files (not committed to repo usually)
+├── model/                  # Data Science Work content
+│   ├── banglore_home_prices_model.pickle  # Serialized Model
+│   ├── columns.json                       # Feature Column names
+│   └── ... (notebooks and datasets)
+├── run.bat                 # Helper script to run the application
+└── README_LOCAL.md         # Local setup instructions
 ```
-ssh -i "C:\Users\Viral\.ssh\Banglore.pem" ubuntu@ec2-3-133-88-210.us-east-2.compute.amazonaws.com
-```
-3. nginx setup
-   1. Install nginx on EC2 instance using these commands,
-   ```
-   sudo apt-get update
-   sudo apt-get install nginx
-   ```
-   2. Above will install nginx as well as run it. Check status of nginx using
-   ```
-   sudo service nginx status
-   ```
-   3. Here are the commands to start/stop/restart nginx
-   ```
-   sudo service nginx start
-   sudo service nginx stop
-   sudo service nginx restart
-   ```
-   4. Now when you load cloud url in browser you will see a message saying "welcome to nginx" This means your nginx is setup and running.
-4. Now you need to copy all your code to EC2 instance. You can do this either using git or copy files using winscp. We will use winscp. You can download winscp from here: https://winscp.net/eng/download.php
-5. Once you connect to EC2 instance from winscp (instruction in a youtube video), you can now copy all code files into /home/ubuntu/ folder. The full path of your root folder is now: **/home/ubuntu/BangloreHomePrices**
-6.  After copying code on EC2 server now we can point nginx to load our property website by default. For below steps,
-    1. Create this file /etc/nginx/sites-available/bhp.conf. The file content looks like this,
-    ```
-    server {
-	    listen 80;
-            server_name bhp;
-            root /home/ubuntu/BangloreHomePrices/client;
-            index app.html;
-            location /api/ {
-                 rewrite ^/api(.*) $1 break;
-                 proxy_pass http://127.0.0.1:5000;
-            }
-    }
-    ```
-    2. Create symlink for this file in /etc/nginx/sites-enabled by running this command,
-    ```
-    sudo ln -v -s /etc/nginx/sites-available/bhp.conf
-    ```
-    3. Remove symlink for default file in /etc/nginx/sites-enabled directory,
-    ```
-    sudo unlink default
-    ```
-    4. Restart nginx,
-    ```
-    sudo service nginx restart
-    ```
-7. Now install python packages and start flask server
-```
-sudo apt-get install python3-pip
-sudo pip3 install -r /home/ubuntu/BangloreHomePrices/server/requirements.txt
-python3 /home/ubuntu/BangloreHomePrices/client/server.py
-```
-Running last command above will prompt that server is running on port 5000.
-8. Now just load your cloud url in browser (for me it was http://ec2-3-133-88-210.us-east-2.compute.amazonaws.com/) and this will be fully functional website running in production cloud environment
 
+## ⚙️ Setup & Installation
 
+Follow these steps to run the application locally on your machine.
 
+### Prerequisites
+- Python 3.x installed
+- pip (Python package manager)
+
+### 1. Backend Setup
+
+Navigate to the server directory and install the required dependencies:
+
+```bash
+cd server
+pip install -r requirements.txt
+```
+
+Launch the Flask server:
+
+```bash
+python server.py
+```
+*The server will start on `http://127.0.0.1:5001` (or 5000, check console output).*
+
+### 2. Frontend Setup
+
+Simply open the `client/app.html` file in your preferred web browser.
+
+Alternatively, you can serve it using a lightweight HTTP server (e.g., VS Code Live Server or Python http.server), but opening the file directly usually works for this setup.
+
+## 📡 API Reference
+
+### 1. Get Location Names
+Retrieves the list of all Bangalore locations available in the model.
+
+- **URL**: `/get_location_names`
+- **Method**: `GET`
+- **Response**:
+  ```json
+  {
+      "locations": ["1st Block Jayanagar", "1st Phase JP Nagar", ...]
+  }
+  ```
+
+### 2. Predict Home Price
+Predicts the price based on input features.
+
+- **URL**: `/predict_home_price`
+- **Method**: `POST`
+- **Form Data**:
+  - `total_sqft`: Float (e.g., 1000)
+  - `location`: String (e.g., "1st Phase JP Nagar")
+  - `bhk`: Integer (e.g., 2)
+  - `bath`: Integer (e.g., 2)
+- **Response**:
+  ```json
+  {
+      "estimated_price": 85.0,
+      "price_range": { "min": 76.5, "max": 93.5 },
+      "price_per_sqft": 8500.0,
+      "confidence": "High",
+      "metrics": { ... },
+      "feature_importance": { ... }
+  }
+  ```
+
+## 📝 Usage
+
+1. Select a **Location** from the dropdown menu.
+2. Enter the **Total Square Feet** area (e.g., 1200).
+3. Select the number of **BHK** (Bedrooms).
+4. Select the number of **Bathrooms**.
+5. Click **"Estimate Price"**.
+6. View the predicted price, price range, and other details.
+
+---
+*Created for the Bangalore Home Price Prediction Project.*
