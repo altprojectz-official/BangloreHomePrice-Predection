@@ -84,8 +84,8 @@ function onClickedEstimatePrice() {
   // Ensure Result Card is visible (if hidden by CSS initially, though now we show placeholder)
   resultCard.style.display = "block";
 
-  var url = "http://127.0.0.1:5001/predict_home_price";
-  // var url = "/api/predict_home_price"; // Use this if using nginx
+  var url = "/predict_home_price";
+  // var url = "http://127.0.0.1:5001/predict_home_price"; // Local dev
 
   $.post(url, {
     total_sqft: parseFloat(sqft.value),
@@ -198,8 +198,8 @@ function toggleSection(id) {
 
 function onPageLoad() {
   console.log("document loaded");
-  var url = "http://127.0.0.1:5001/get_location_names";
-  // var url = "/api/get_location_names"; // Use this if using nginx
+  var url = "/get_location_names";
+  // var url = "http://127.0.0.1:5001/get_location_names"; // Local dev
 
   $.get(url, function (data, status) {
     console.log("got response for get_location_names request");
