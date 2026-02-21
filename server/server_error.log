@@ -1,1 +1,0 @@
-Error in predict_home_price: 'LinearRegression' object has no attribute 'positive'
