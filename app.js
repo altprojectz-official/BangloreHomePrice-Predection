@@ -84,7 +84,7 @@ function onClickedEstimatePrice() {
   // Ensure Result Card is visible (if hidden by CSS initially, though now we show placeholder)
   resultCard.style.display = "block";
 
-  var url = "/predict_home_price";
+  var url = "https://banglorehomeprice-predection.onrender.com/predict_home_price";
   // var url = "http://127.0.0.1:5001/predict_home_price"; // Local dev
 
   $.post(url, {
@@ -198,7 +198,7 @@ function toggleSection(id) {
 
 function onPageLoad() {
   console.log("document loaded");
-  var url = "/get_location_names";
+  var url = "https://banglorehomeprice-predection.onrender.com/get_location_names";
   // var url = "http://127.0.0.1:5001/get_location_names"; // Local dev
 
   $.get(url, function (data, status) {
